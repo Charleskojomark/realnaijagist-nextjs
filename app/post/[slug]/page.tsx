@@ -1,19 +1,25 @@
-export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs } from '@/lib/posts'
+import { getOptimizedImageUrl } from '@/lib/images'
 import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
 import AdUnit from '@/components/AdUnit'
+
+export const dynamic = 'force-dynamic'
 
 interface PageProps {
   params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPublishedSlugs()
-  return posts.slice(0, 30).map((p) => ({ slug: p.slug }))
+  try {
+    const posts = await getAllPublishedSlugs()
+    return posts.slice(0, 30).map((p) => ({ slug: p.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -21,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug)
   if (!post) return { title: 'Post Not Found | RealNaijaGist' }
 
-  const ogImage = post.cdnImageUrl || post.featuredImage || '/og-image.jpg'
+  const ogImage = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
 
   return {
     title: `${post.title} | RealNaijaGist`,
@@ -52,7 +58,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   if (!post) notFound()
 
   const related = await getRelatedPosts(post.categoryId, post.id, 3)
-  const imageUrl = post.cdnImageUrl || post.featuredImage || '/placeholder-news.jpg'
+  const imageUrl = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
   const dateFormatted = new Date(post.createdAt).toLocaleDateString('en-NG', {
     day: 'numeric',
     month: 'long',
@@ -156,6 +162,18 @@ export default async function PostDetailPage({ params }: PageProps) {
               className="prose prose-invert prose-emerald max-w-none text-slate-300 leading-relaxed text-base sm:text-lg space-y-4"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
+            {/* Video Post Embed if present */}
+            {post.isVideoPost && post.videoEmbedUrl && (
+              <div className="aspect-video w-full rounded-xl overflow-hidden my-6 border border-slate-800">
+                <iframe
+                  src={post.videoEmbedUrl}
+                  title={post.title}
+                  className="w-full h-full"
+                  allowFullScreen
+                />
+              </div>
+            )}
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (

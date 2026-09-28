@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large seed files
+prisma/seed-data.json
+prisma/test_*.ts

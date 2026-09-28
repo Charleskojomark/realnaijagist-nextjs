@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import { getOptimizedImageUrl } from '@/lib/images'
 
 interface PostCardProps {
   post: {
@@ -21,7 +21,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, featured = false }: PostCardProps) {
-  const imageUrl = post.cdnImageUrl || post.featuredImage || '/placeholder-news.jpg'
+  const imageUrl = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
   const dateStr = new Date(post.createdAt).toLocaleDateString('en-NG', {
     day: 'numeric',
     month: 'short',
