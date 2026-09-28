@@ -1,0 +1,266 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ScraperStatus {
+  PENDING
+  PUBLISHED
+  FAILED
+  REJECTED
+}
+
+enum LogLevel {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  image       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  posts       Post[]
+  feeds       RssFeed[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  posts     PostTag[]
+
+  @@map("tags")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  firstName    String?   @map("first_name")
+  lastName     String?   @map("last_name")
+  bio          String?   @db.Text
+  avatar       String?
+  isStaff      Boolean   @default(false) @map("is_staff")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  posts          Post[]
+  comments       Comment[]
+  carouselSlides CarouselSlide[]
+  postLikes      Like[]
+
+  @@map("users")
+}
+
+model Post {
+  id              Int        @id @default(autoincrement())
+  title           String
+  slug            String     @unique
+  content         String     @db.Text
+  excerpt         String?    @db.Text
+  featuredImage   String?    @map("featured_image")
+  cdnImageUrl     String?    @map("cdn_image_url")
+  imageAltText    String?    @map("image_alt_text")
+  status          PostStatus @default(DRAFT)
+  isFeatured      Boolean    @default(false) @map("is_featured")
+  isTrending      Boolean    @default(false) @map("is_trending")
+  isVideoPost     Boolean    @default(false) @map("is_video_post")
+  videoEmbedUrl   String?    @map("video_embed_url")
+  views           Int        @default(0)
+  likes           Int        @default(0)
+  shares          Int        @default(0)
+  sourceUrl       String?    @map("source_url")
+  sourceName      String?    @map("source_name")
+  isAggregated    Boolean    @default(false) @map("is_aggregated")
+
+  categoryId      Int        @map("category_id")
+  category        Category   @relation(fields: [categoryId], references: [id])
+
+  authorId        Int        @map("author_id")
+  author          User       @relation(fields: [authorId], references: [id])
+
+  tags            PostTag[]
+  comments        Comment[]
+  postLikes       Like[]
+  carouselSlides  CarouselSlide[]
+  scrapedArticles ScrapedArticle[]
+
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+  publishedAt     DateTime?  @map("published_at")
+
+  @@index([status, createdAt])
+  @@index([categoryId, status])
+  @@index([isTrending, createdAt])
+  @@map("posts")
+}
+
+model PostTag {
+  postId Int  @map("post_id")
+  tagId  Int  @map("tag_id")
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model CarouselSlide {
+  id              Int       @id @default(autoincrement())
+  title           String
+  subtitle        String?
+  description     String?   @db.Text
+  image           String?
+  imageAltText    String?   @map("image_alt_text")
+  scrapedImageUrl String?   @map("scraped_image_url")
+
+  authorId        Int?      @map("author_id")
+  author          User?     @relation(fields: [authorId], references: [id])
+
+  postId          Int?      @map("post_id")
+  post            Post?     @relation(fields: [postId], references: [id])
+
+  views           Int       @default(0)
+  likes           Int       @default(0)
+  isActive        Boolean   @default(true) @map("is_active")
+  order           Int       @default(0)
+  featuredUntil   DateTime? @map("featured_until")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("carousel_slides")
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  isApproved Boolean  @default(true) @map("is_approved")
+
+  postId    Int       @map("post_id")
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId  Int?      @map("author_id")
+  author    User?     @relation(fields: [authorId], references: [id])
+
+  name      String?
+  email     String?
+
+  parentId  Int?      @map("parent_id")
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@map("comments")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  postId    Int      @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId    Int?     @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id])
+
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([postId, ipAddress])
+  @@map("likes")
+}
+
+model Subscriber {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  isActive     Boolean  @default(true) @map("is_active")
+  unsubToken   String?  @unique @map("unsub_token")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("subscribers")
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contact_messages")
+}
+
+model RssFeed {
+  id          Int       @id @default(autoincrement())
+  name        String
+  url         String    @unique
+  categoryId  Int       @map("category_id")
+  category    Category  @relation(fields: [categoryId], references: [id])
+  isActive    Boolean   @default(true) @map("is_active")
+  lastScraped DateTime? @map("last_scraped")
+
+  articles    ScrapedArticle[]
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("rss_feeds")
+}
+
+model ScrapedArticle {
+  id             Int           @id @default(autoincrement())
+  title          String
+  originalUrl    String        @unique @map("original_url")
+  originalContent String?      @db.Text @map("original_content")
+  rewrittenTitle String?       @map("rewritten_title")
+  rewrittenContent String?     @db.Text @map("rewritten_content")
+  status         ScraperStatus @default(PENDING)
+  errorMessage   String?       @map("error_message")
+
+  feedId         Int           @map("feed_id")
+  feed           RssFeed       @relation(fields: [feedId], references: [id])
+
+  postId         Int?          @map("post_id")
+  post           Post?         @relation(fields: [postId], references: [id])
+
+  createdAt      DateTime      @default(now()) @map("created_at")
+  processedAt    DateTime?     @map("processed_at")
+
+  @@map("scraped_articles")
+}
+
+model ScrapingLog {
+  id        Int      @id @default(autoincrement())
+  level     LogLevel @default(INFO)
+  message   String   @db.Text
+  details   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("scraping_logs")
+}
