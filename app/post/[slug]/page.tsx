@@ -6,6 +6,7 @@ import { getOptimizedImageUrl } from '@/lib/images'
 import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
 import AdUnit from '@/components/AdUnit'
+import { formatPostContent } from '@/lib/formatContent'
 
 export const dynamic = 'force-dynamic'
 
@@ -160,7 +161,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             {/* Post Body */}
             <div
               className="prose prose-invert prose-emerald max-w-none text-slate-300 leading-relaxed text-base sm:text-lg space-y-4"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: formatPostContent(post.content) }}
             />
 
             {/* Video Post Embed if present */}
