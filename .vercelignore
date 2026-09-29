@@ -1,0 +1,15 @@
+﻿# Large seed/backup files not needed for deployment
+prisma/seed-data.json
+prisma/seed-resume.ts
+prisma/seed.ts
+prisma/seed_final.ts
+
+# Dev/backup files
+live_backup/
+*.sql
+*.tar
+*.gz
+*.dump
+
+# Test scripts
+scripts/
