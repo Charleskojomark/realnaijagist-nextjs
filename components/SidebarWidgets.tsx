@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getOptimizedImageUrl } from '@/lib/images'
 import AdUnit from './AdUnit'
 
 interface PostSummary {
@@ -62,12 +63,7 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
           </h3>
           <div className="space-y-3.5">
             {popularPosts.map((post) => {
-              const rawImg = post.cdnImageUrl || post.featuredImage || ''
-              const img = rawImg
-                ? rawImg.startsWith('http')
-                  ? rawImg
-                  : `https://res.cloudinary.com/realnaijagist/${rawImg}`
-                : '/placeholder-news.jpg'
+              const img = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
               return (
                 <div key={post.id} className="flex gap-3 items-center group">
                   <div className="w-14 h-14 rounded-lg overflow-hidden bg-slate-800 flex-shrink-0">
@@ -76,6 +72,9 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = '/placeholder-news.svg'
+                      }}
                     />
                   </div>
                   <div className="space-y-1 flex-1 min-w-0">

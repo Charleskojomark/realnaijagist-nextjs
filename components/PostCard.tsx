@@ -38,6 +38,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
             alt={post.imageAltText || post.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder-news.svg" }}
           />
           {post.category && (
             <span className="absolute top-4 left-4 bg-emerald-600 text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
@@ -93,6 +94,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
           alt={post.imageAltText || post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+        onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder-news.svg" }}
         />
         {post.category && (
           <span className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-sm text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">

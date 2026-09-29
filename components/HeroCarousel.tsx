@@ -1,4 +1,5 @@
 'use client'
+import { getOptimizedImageUrl } from '@/lib/images'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -33,7 +34,7 @@ export default function HeroCarousel({ slides = [] }: HeroCarouselProps) {
 
   const activeSlide = slides[current]
   const targetUrl = activeSlide.actionUrl || (activeSlide.post?.slug ? `/post/${activeSlide.post.slug}` : '/')
-  const displayImage = activeSlide.imageUrl || activeSlide.image || activeSlide.scrapedImageUrl || '/placeholder-news.jpg'
+  const displayImage = getOptimizedImageUrl(activeSlide.imageUrl || activeSlide.image || activeSlide.scrapedImageUrl)
 
   return (
     <div className="relative w-full h-[380px] sm:h-[460px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-800">
