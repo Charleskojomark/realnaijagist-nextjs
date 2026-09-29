@@ -72,9 +72,6 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       loading="lazy"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = '/placeholder-news.svg'
-                      }}
                     />
                   </div>
                   <div className="space-y-1 flex-1 min-w-0">
