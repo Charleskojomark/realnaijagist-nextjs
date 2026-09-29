@@ -1,19 +1,17 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { getSession } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import AdminHeader from './AdminHeader'
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await getSession()
 
-  // Note: if user is not logged in, layout will be handled or pages will redirect
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
       <AdminHeader user={session} />
       <div className="flex flex-1">
         {session && (
-          <aside className="w-64 bg-slate-900/80 border-r border-slate-800 p-5 hidden md:flex flex-col justify-between">
+          <aside className="w-64 bg-slate-900/80 border-r border-slate-800 p-5 hidden md:flex flex-col justify-between shrink-0">
             <div className="space-y-6">
               <div>
                 <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">
@@ -92,7 +90,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           </aside>
         )}
 
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+        <main className="flex-1 p-3.5 sm:p-6 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full min-w-0">
           {children}
         </main>
       </div>

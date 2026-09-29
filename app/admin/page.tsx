@@ -26,66 +26,66 @@ export default async function AdminDashboardPage() {
   ])
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 max-w-6xl mx-auto pb-16">
       {/* Welcome Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/20 rounded-2xl p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/20 rounded-2xl p-5 sm:p-6 shadow-xl">
         <div>
-          <h1 className="text-2xl font-black text-white">
+          <h1 className="text-xl sm:text-2xl font-black text-white">
             Welcome back, <span className="text-emerald-400">{session.username}</span>!
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            RealNaijaGist Editorial & Content Management Console
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            RealNaijaGist Editorial & Content Console
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Link
             href="/admin/posts/new"
-            className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+            className="flex-1 sm:flex-none text-center px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-lg shadow-emerald-500/20"
           >
-            <span>+ Write New Article</span>
+            + Write Article
           </Link>
           <a
             href="/"
             target="_blank"
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition border border-slate-700"
+            className="flex-1 sm:flex-none text-center px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition border border-slate-700"
           >
-            View Live Site ↗
+            Live Site ↗
           </a>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Articles</p>
-          <p className="text-3xl font-black text-white mt-2">{totalPosts.toLocaleString()}</p>
-          <p className="text-xs text-slate-500 mt-1">Migrated & active in database</p>
+      {/* Stats Cards: 2-col on Mobile, 4-col on Desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-400 font-bold">Total Articles</p>
+          <p className="text-2xl sm:text-3xl font-black text-white mt-1.5">{totalPosts.toLocaleString()}</p>
+          <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">In database</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-emerald-400 font-semibold">Published</p>
-          <p className="text-3xl font-black text-emerald-400 mt-2">{publishedPosts.toLocaleString()}</p>
-          <p className="text-xs text-slate-500 mt-1">Live on the public website</p>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider text-emerald-400 font-bold">Published</p>
+          <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1.5">{publishedPosts.toLocaleString()}</p>
+          <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Live on site</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-amber-400 font-semibold">Drafts</p>
-          <p className="text-3xl font-black text-amber-400 mt-2">{draftPosts.toLocaleString()}</p>
-          <p className="text-xs text-slate-500 mt-1">Unpublished editorial drafts</p>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider text-amber-400 font-bold">Drafts</p>
+          <p className="text-2xl sm:text-3xl font-black text-amber-400 mt-1.5">{draftPosts.toLocaleString()}</p>
+          <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Unpublished</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-purple-400 font-semibold">Categories</p>
-          <p className="text-3xl font-black text-purple-400 mt-2">{totalCategories}</p>
-          <p className="text-xs text-slate-500 mt-1">Topics & news sections</p>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider text-purple-400 font-bold">Categories</p>
+          <p className="text-2xl sm:text-3xl font-black text-purple-400 mt-1.5">{totalCategories}</p>
+          <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">News topics</p>
         </div>
       </div>
 
-      {/* Recent Posts Table */}
+      {/* Recent Posts: Mobile Cards + Desktop Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-white">Recent Articles</h2>
+            <h2 className="text-base sm:text-lg font-bold text-white">Recent Articles</h2>
             <p className="text-xs text-slate-400 mt-0.5">Latest published or edited stories</p>
           </div>
           <Link
@@ -96,7 +96,51 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile View */}
+        <div className="sm:hidden divide-y divide-slate-800">
+          {recentPosts.map((post) => (
+            <div key={post.id} className="p-4 space-y-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <Link href={`/admin/posts/${post.id}`} className="font-bold text-white text-sm hover:text-emerald-400 line-clamp-2 leading-snug">
+                  {post.title}
+                </Link>
+                <span
+                  className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                    post.status === 'PUBLISHED'
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                  }`}
+                >
+                  {post.status}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
+                <span className="bg-slate-800 px-2 py-0.5 rounded text-[11px] text-slate-300">
+                  {post.category.name}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/posts/${post.id}`}
+                    className="px-2.5 py-1 text-xs font-semibold bg-slate-800 text-white rounded-md"
+                  >
+                    Edit
+                  </Link>
+                  <a
+                    href={`/post/${post.slug}`}
+                    target="_blank"
+                    className="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20"
+                  >
+                    View ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-950/60 text-slate-400 uppercase text-xs border-b border-slate-800">
               <tr>
@@ -115,7 +159,7 @@ export default async function AdminDashboardPage() {
                       {post.title}
                     </Link>
                   </td>
-                  <td className="py-4 px-6 text-slate-400 whitespace-now4">
+                  <td className="py-4 px-6 text-slate-400 whitespace-nowrap">
                     <span className="bg-slate-800 px-2.5 py-1 rounded-md text-xs">
                       {post.category.name}
                     </span>

@@ -50,6 +50,8 @@ export async function GET(req: NextRequest) {
           createdAt: true,
           publishedAt: true,
           featuredImage: true,
+          isVideoPost: true,
+          videoEmbedUrl: true,
           category: {
             select: { id: true, name: true, slug: true },
           },
@@ -91,6 +93,8 @@ export async function POST(req: NextRequest) {
       status = 'PUBLISHED',
       isFeatured = false,
       isTrending = false,
+      isVideoPost = false,
+      videoEmbedUrl,
     } = body
 
     if (!title || !content || !categoryId) {
@@ -98,6 +102,18 @@ export async function POST(req: NextRequest) {
         { error: 'Title, content, and category are required' },
         { status: 400 }
       )
+    }
+
+    // Helper to format YouTube embed URLs if user inputs a standard watch URL
+    let formattedVideoUrl = videoEmbedUrl?.trim() || null
+    if (formattedVideoUrl) {
+      if (formattedVideoUrl.includes('youtube.com/watch?v=')) {
+        const videoId = formattedVideoUrl.split('v=')[1]?.split('&')[0]
+        if (videoId) formattedVideoUrl = `https://www.youtube.com/embed/${videoId}`
+      } else if (formattedVideoUrl.includes('youtu.be/')) {
+        const videoId = formattedVideoUrl.split('youtu.be/')[1]?.split('?')[0]
+        if (videoId) formattedVideoUrl = `https://www.youtube.com/embed/${videoId}`
+      }
     }
 
     // Generate or format slug
@@ -128,6 +144,8 @@ export async function POST(req: NextRequest) {
         status: status as PostStatus,
         isFeatured: Boolean(isFeatured),
         isTrending: Boolean(isTrending),
+        isVideoPost: Boolean(isVideoPost) || Boolean(formattedVideoUrl),
+        videoEmbedUrl: formattedVideoUrl,
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
       },
     })

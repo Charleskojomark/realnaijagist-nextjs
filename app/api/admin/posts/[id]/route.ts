@@ -59,6 +59,8 @@ export async function PUT(
       status,
       isFeatured,
       isTrending,
+      isVideoPost,
+      videoEmbedUrl,
     } = body
 
     const existingPost = await prisma.post.findUnique({ where: { id: postId } })
@@ -81,6 +83,23 @@ export async function PUT(
     }
     if (isFeatured !== undefined) updateData.isFeatured = Boolean(isFeatured)
     if (isTrending !== undefined) updateData.isTrending = Boolean(isTrending)
+
+    if (videoEmbedUrl !== undefined) {
+      let formattedVideoUrl = videoEmbedUrl?.trim() || null
+      if (formattedVideoUrl) {
+        if (formattedVideoUrl.includes('youtube.com/watch?v=')) {
+          const videoId = formattedVideoUrl.split('v=')[1]?.split('&')[0]
+          if (videoId) formattedVideoUrl = `https://www.youtube.com/embed/${videoId}`
+        } else if (formattedVideoUrl.includes('youtu.be/')) {
+          const videoId = formattedVideoUrl.split('youtu.be/')[1]?.split('?')[0]
+          if (videoId) formattedVideoUrl = `https://www.youtube.com/embed/${videoId}`
+        }
+      }
+      updateData.videoEmbedUrl = formattedVideoUrl
+      updateData.isVideoPost = Boolean(isVideoPost) || Boolean(formattedVideoUrl)
+    } else if (isVideoPost !== undefined) {
+      updateData.isVideoPost = Boolean(isVideoPost)
+    }
 
     const updated = await prisma.post.update({
       where: { id: postId },
