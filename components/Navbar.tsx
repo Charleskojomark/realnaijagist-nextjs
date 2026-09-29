@@ -55,21 +55,21 @@ export default function Navbar({ categories = [] }: NavbarProps) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-3.5 group py-1.5">
             <img
-              src="/logo.png"
-              alt="RealNaijaGist"
-              width={36}
-              height={36}
-              className="w-9 h-9 rounded-lg object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform bg-slate-950/40 p-0.5"
+              src="/logo.png?v=2"
+              alt="RealNaijaGist Logo"
+              width={64}
+              height={64}
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain filter drop-shadow-[0_2px_12px_rgba(16,185,129,0.35)] group-hover:scale-105 transition-all duration-300"
             />
             <div className="flex flex-col">
-              <span className="font-black text-xl tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+              <span className="font-black text-2xl sm:text-3xl tracking-tight text-white group-hover:text-emerald-400 transition-colors leading-none">
                 REAL<span className="text-emerald-400">NAIJA</span>GIST
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-slate-400 -mt-1 font-semibold">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-emerald-400/90 font-bold mt-1">
                 Verified Naija Pulse
               </span>
             </div>

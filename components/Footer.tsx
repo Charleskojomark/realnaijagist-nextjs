@@ -17,17 +17,22 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand info */}
           <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <img
-                src="/logo.png"
+                src="/logo.png?v=2"
                 alt="RealNaijaGist"
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-lg object-contain shadow-md shadow-emerald-500/20 bg-slate-900/60 p-0.5"
+                width={48}
+                height={48}
+                className="h-12 sm:h-14 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(16,185,129,0.3)]"
               />
-              <span className="font-black text-xl text-white tracking-tight">
-                REAL<span className="text-emerald-400">NAIJA</span>GIST
-              </span>
+              <div className="flex flex-col">
+                <span className="font-black text-2xl text-white tracking-tight leading-none">
+                  REAL<span className="text-emerald-400">NAIJA</span>GIST
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-slate-400 font-semibold mt-0.5">
+                  Nigeria's Premier Pulse
+                </span>
+              </div>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Nigeria&apos;s authoritative digital magazine delivering verified breaking news, political commentary, entertainment gist, viral trends, and cultural insight.
