@@ -62,7 +62,12 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
           </h3>
           <div className="space-y-3.5">
             {popularPosts.map((post) => {
-              const img = post.cdnImageUrl || post.featuredImage || '/placeholder-news.jpg'
+              const rawImg = post.cdnImageUrl || post.featuredImage || ''
+              const img = rawImg
+                ? rawImg.startsWith('http')
+                  ? rawImg
+                  : `https://res.cloudinary.com/realnaijagist/${rawImg}`
+                : '/placeholder-news.jpg'
               return (
                 <div key={post.id} className="flex gap-3 items-center group">
                   <div className="w-14 h-14 rounded-lg overflow-hidden bg-slate-800 flex-shrink-0">

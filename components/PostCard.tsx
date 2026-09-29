@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatExcerpt, readingTime } from '@/lib/formatExcerpt'
 import { getOptimizedImageUrl } from '@/lib/images'
 
 interface PostCardProps {
@@ -64,7 +65,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
             </h2>
             {post.excerpt && (
               <p className="text-sm text-slate-400 line-clamp-3 leading-relaxed">
-                {post.excerpt}
+                {formatExcerpt(post.excerpt)}
               </p>
             )}
           </div>
@@ -105,6 +106,8 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
             <span>{dateStr}</span>
             <span>•</span>
             <span>{post.views || 0} reads</span>
+            <span>·</span>
+            <span>{readingTime(post.excerpt || post.title)} min read</span>
           </div>
           <h3 className="font-bold text-sm text-white group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
             <Link href={`/post/${post.slug}`}>
@@ -113,7 +116,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
           </h3>
           {post.excerpt && (
             <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-              {post.excerpt}
+              {formatExcerpt(post.excerpt)}
             </p>
           )}
         </div>

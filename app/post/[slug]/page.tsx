@@ -7,6 +7,8 @@ import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
 import AdUnit from '@/components/AdUnit'
 import { formatPostContent } from '@/lib/formatContent'
+import SocialShare from '@/components/SocialShare'
+import { readingTime } from '@/lib/formatExcerpt'
 
 export const dynamic = 'force-dynamic'
 
@@ -143,6 +145,8 @@ export default async function PostDetailPage({ params }: PageProps) {
                 <time dateTime={post.createdAt.toISOString()}>{dateFormatted}</time>
                 <span>•</span>
                 <span>{post.views} views</span>
+                <span>•</span>
+                <span>{readingTime(post.content)} min read</span>
               </div>
             </header>
 
@@ -191,6 +195,15 @@ export default async function PostDetailPage({ params }: PageProps) {
                 ))}
               </div>
             )}
+
+            
+            {/* Share Buttons */}
+            <div className="pt-6 border-t border-slate-800">
+              <SocialShare
+                url={`https://realnaijagist.com/post/${post.slug}`}
+                title={post.title}
+              />
+            </div>
 
             {/* Bottom In-Article Ad */}
             <AdUnit slot="article-bottom" format="rectangle" />

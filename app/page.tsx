@@ -36,9 +36,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </section>
       )}
 
-      {/* Top Banner Advertisement (AdSense) */}
-      <AdUnit slot="homepage-leaderboard" format="horizontal" />
-
       {/* Main Grid Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         {/* Main Feed */}
@@ -54,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </h1>
             </div>
             <span className="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full">
-              {total} Total Stories
+              Today's News
             </span>
           </div>
 
@@ -64,6 +61,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <PostCard post={featuredPost} featured={true} />
             </div>
           )}
+
+          {/* Mid-content Ad (after featured story) */}
+          <AdUnit slot="homepage-leaderboard" format="horizontal" />
 
           {/* Regular Posts Grid */}
           {standardPosts.length === 0 && !featuredPost ? (
