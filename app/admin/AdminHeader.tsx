@@ -64,7 +64,14 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
             </button>
           )}
 
-          <Link href="/admin" className="flex items-center gap-1.5 sm:gap-2">
+          <Link href="/admin" className="flex items-center gap-2">
+            <img
+              src="/logo.png"
+              alt="RealNaijaGist"
+              width={28}
+              height={28}
+              className="w-7 h-7 rounded-md object-contain bg-slate-900 p-0.5"
+            />
             <span className="font-black text-base sm:text-lg text-emerald-400 tracking-tight">RealNaijaGist</span>
             <span className="bg-emerald-500/10 text-emerald-400 text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider border border-emerald-500/20">
               Admin

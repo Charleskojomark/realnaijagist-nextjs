@@ -61,6 +61,11 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/logo.png',
+  },
   twitter: {
     card: 'summary_large_image',
     site: '@RealNaijaGist',
@@ -85,6 +90,8 @@ export default async function RootLayout({
     <html lang="en" className={outfit.variable}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         {/* Google AdSense Script */}

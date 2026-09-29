@@ -58,9 +58,13 @@ export default function Navbar({ categories = [] }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              R
-            </div>
+            <img
+              src="/logo.png"
+              alt="RealNaijaGist"
+              width={36}
+              height={36}
+              className="w-9 h-9 rounded-lg object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform bg-slate-950/40 p-0.5"
+            />
             <div className="flex flex-col">
               <span className="font-black text-xl tracking-tight text-white group-hover:text-emerald-400 transition-colors">
                 REAL<span className="text-emerald-400">NAIJA</span>GIST

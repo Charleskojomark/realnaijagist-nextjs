@@ -18,9 +18,13 @@ export default function Footer() {
           {/* Brand info */}
           <div className="space-y-4 md:col-span-1">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center font-black text-lg text-white">
-                R
-              </div>
+              <img
+                src="/logo.png"
+                alt="RealNaijaGist"
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded-lg object-contain shadow-md shadow-emerald-500/20 bg-slate-900/60 p-0.5"
+              />
               <span className="font-black text-xl text-white tracking-tight">
                 REAL<span className="text-emerald-400">NAIJA</span>GIST
               </span>

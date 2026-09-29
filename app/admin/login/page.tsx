@@ -43,8 +43,8 @@ export default function AdminLoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-black text-xl mb-4">
-            R
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-950 border border-slate-800 p-2 mb-4 shadow-xl shadow-emerald-500/10">
+            <img src="/logo.png" alt="RealNaijaGist" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">Staff & Editorial Portal</h1>
           <p className="text-sm text-slate-400 mt-1">RealNaijaGist Administration</p>
