@@ -3,6 +3,7 @@ import { Outfit } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import CookieConsent from '@/components/CookieConsent'
 import { getAllCategories } from '@/lib/posts'
 
 const outfit = Outfit({
@@ -99,6 +100,7 @@ export default async function RootLayout({
           {children}
         </div>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   )

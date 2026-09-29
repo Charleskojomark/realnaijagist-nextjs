@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useToast } from '@/components/admin/ToastContext'
 
 interface Category {
   id: number
@@ -28,6 +29,7 @@ interface PostFormProps {
 
 export default function AdminPostForm({ postId, initialData }: PostFormProps) {
   const router = useRouter()
+  const { showToast } = useToast()
   const isEditing = Boolean(postId)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -118,8 +120,11 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
       }
 
       setFeaturedImage(data.url)
+      showToast('📸 Photo uploaded to Cloudinary successfully!', 'success')
     } catch (err: any) {
-      setError(err.message || 'Error uploading photo')
+      const msg = err.message || 'Error uploading photo'
+      setError(msg)
+      showToast(msg, 'error')
     } finally {
       setUploadingImage(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -149,8 +154,11 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
       }
 
       insertIntoContent(`\n<img src="${data.url}" alt="${file.name.replace(/\.[^/.]+$/, '')}" class="w-full rounded-2xl my-4 shadow-md" />\n`)
+      showToast('📸 Photo inserted into article body!', 'success')
     } catch (err: any) {
-      setError(err.message || 'Error uploading photo into content')
+      const msg = err.message || 'Error uploading photo into content'
+      setError(msg)
+      showToast(msg, 'error')
     } finally {
       setUploadingContentImage(false)
       if (contentImageInputRef.current) contentImageInputRef.current.value = ''
@@ -174,6 +182,7 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
     insertIntoContent(
       `\n<div class="relative w-full aspect-video my-5 rounded-2xl overflow-hidden shadow-lg">\n  <iframe src="${embedSrc}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\n</div>\n`
     )
+    showToast('🎬 Video embedded into body!', 'success')
   }
 
   // Insert Link snippet
@@ -230,10 +239,21 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
         throw new Error(data.error || 'Failed to save post')
       }
 
-      router.push('/admin/posts')
-      router.refresh()
+      showToast(
+        isEditing
+          ? '✅ Article updated successfully!'
+          : '🎉 Article published successfully!',
+        'success'
+      )
+
+      setTimeout(() => {
+        router.push('/admin/posts')
+        router.refresh()
+      }, 800)
     } catch (err: any) {
-      setError(err.message || 'Error saving post')
+      const msg = err.message || 'Error saving post'
+      setError(msg)
+      showToast(msg, 'error')
     } finally {
       setSaving(false)
     }
@@ -540,6 +560,7 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
                       ? featuredImage
                       : `https://res.cloudinary.com/da0r9kmia/${featuredImage}`
                     insertIntoContent(`\n<img src="${fullUrl}" alt="${title || 'Image'}" class="w-full rounded-2xl my-4 shadow-md" />\n`)
+                    showToast('Cover photo inserted into article content!', 'info')
                   }}
                   className="w-full py-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition"
                 >

@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { SessionUser } from '@/lib/auth'
 import { useState, useEffect } from 'react'
+import { useToast } from '@/components/admin/ToastContext'
 
 export default function AdminHeader({ user }: { user: SessionUser | null }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { showToast } = useToast()
   const [loggingOut, setLoggingOut] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -20,6 +22,7 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
     try {
       setLoggingOut(true)
       await fetch('/api/auth/logout', { method: 'POST' })
+      showToast('Logged out successfully', 'info')
       router.push('/admin/login')
       router.refresh()
     } catch (err) {
@@ -39,8 +42,8 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
 
   return (
     <>
-      <header className="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
-        <div className="flex items-center gap-3">
+      <header className="bg-slate-900 border-b border-slate-800 px-3 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Mobile Menu Hamburger Button */}
           {user && (
             <button
@@ -50,36 +53,37 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? (
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
           )}
 
-          <Link href="/admin" className="flex items-center gap-2">
-            <span className="font-black text-lg text-emerald-400 tracking-tight">RealNaijaGist</span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider border border-emerald-500/20">
+          <Link href="/admin" className="flex items-center gap-1.5 sm:gap-2">
+            <span className="font-black text-base sm:text-lg text-emerald-400 tracking-tight">RealNaijaGist</span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider border border-emerald-500/20">
               Admin
             </span>
           </Link>
         </div>
 
         {user ? (
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Quick Action Button for Mobile & Desktop */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Quick Action Button */}
             <Link
               href="/admin/posts/new"
-              className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition shadow-sm"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center gap-1 transition shadow-sm"
             >
               <span>+</span>
-              <span className="hidden xs:inline">New Post</span>
+              <span>New</span>
             </Link>
 
+            {/* Desktop User Info & Sign Out (Hidden on Mobile to prevent any overflow) */}
             <div className="hidden sm:block text-right">
               <p className="text-xs font-bold text-white leading-tight">
                 {user.username}
@@ -90,7 +94,7 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition disabled:opacity-50 cursor-pointer"
+              className="hidden sm:block px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition disabled:opacity-50 cursor-pointer"
             >
               {loggingOut ? '...' : 'Sign Out'}
             </button>
@@ -107,7 +111,7 @@ export default function AdminHeader({ user }: { user: SessionUser | null }) {
 
       {/* Mobile Drawer Navigation Menu */}
       {user && mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[57px] bg-slate-950/95 backdrop-blur-xl z-40 p-5 flex flex-col justify-between border-t border-slate-800 animate-fadeIn overflow-y-auto">
+        <div className="md:hidden fixed inset-0 top-[53px] bg-slate-950/95 backdrop-blur-xl z-40 p-5 flex flex-col justify-between border-t border-slate-800 overflow-y-auto">
           <div className="space-y-6">
             {/* User Info Card */}
             <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">

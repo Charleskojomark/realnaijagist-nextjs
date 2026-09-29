@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { useToast } from '@/components/admin/ToastContext'
 
 interface PostItem {
   id: number
@@ -18,6 +19,7 @@ interface PostItem {
 }
 
 export default function AdminPostsPage() {
+  const { showToast } = useToast()
   const [posts, setPosts] = useState<PostItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -70,12 +72,13 @@ export default function AdminPostsPage() {
       if (res.ok) {
         setPosts((prev) => prev.filter((p) => p.id !== id))
         setTotal((prev) => prev - 1)
+        showToast('🗑️ Article deleted successfully!', 'success')
       } else {
-        alert('Failed to delete article')
+        showToast('Failed to delete article', 'error')
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
-      alert('Error deleting article')
+      showToast(err.message || 'Error deleting article', 'error')
     } finally {
       setDeletingId(null)
     }
@@ -112,7 +115,7 @@ export default function AdminPostsPage() {
           />
           <button
             type="submit"
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs sm:text-sm font-semibold transition"
+            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer"
           >
             Search
           </button>
@@ -193,7 +196,7 @@ export default function AdminPostsPage() {
                     <button
                       onClick={() => handleDelete(post.id)}
                       disabled={deletingId === post.id}
-                      className="py-2 px-3 text-xs font-bold bg-red-500/10 text-red-400 rounded-lg border border-red-500/20 hover:bg-red-500/20 transition disabled:opacity-50"
+                      className="py-2 px-3 text-xs font-bold bg-red-500/10 text-red-400 rounded-lg border border-red-500/20 hover:bg-red-500/20 transition disabled:opacity-50 cursor-pointer"
                     >
                       Delete
                     </button>
@@ -233,8 +236,8 @@ export default function AdminPostsPage() {
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
                             post.status === 'PUBLISHED'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                           }`}
                         >
                           {post.status}
