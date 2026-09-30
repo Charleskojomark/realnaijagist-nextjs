@@ -1,14 +1,21 @@
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs } from '@/lib/posts'
 import { getOptimizedImageUrl } from '@/lib/images'
+import { formatPostContent } from '@/lib/formatContent'
+import { readingTime } from '@/lib/formatExcerpt'
+import SocialShare from '@/components/SocialShare'
+import AdUnit from '@/components/AdUnit'
 import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
-import AdUnit from '@/components/AdUnit'
-import { formatPostContent } from '@/lib/formatContent'
-import SocialShare from '@/components/SocialShare'
-import { readingTime } from '@/lib/formatExcerpt'
+
+// Innovations for Google AdSense & Reader Engagement
+import ReadingProgressBar from '@/components/ReadingProgressBar'
+import FactCheckBadge from '@/components/FactCheckBadge'
+import KeyTakeaways from '@/components/KeyTakeaways'
+import ReactionWidget from '@/components/ReactionWidget'
+import AudioPlayer from '@/components/AudioPlayer'
 
 export const dynamic = 'force-dynamic'
 
@@ -97,6 +104,9 @@ export default async function PostDetailPage({ params }: PageProps) {
 
   return (
     <>
+      {/* Top Reading Progress Bar */}
+      <ReadingProgressBar />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -122,11 +132,16 @@ export default async function PostDetailPage({ params }: PageProps) {
           {/* Main Article Content */}
           <article className="lg:col-span-8 space-y-6">
             <header className="space-y-4">
-              {post.category && (
-                <span className="bg-emerald-600/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                  {post.category.name}
-                </span>
-              )}
+              <div className="flex flex-wrap items-center gap-3">
+                {post.category && (
+                  <span className="bg-emerald-600/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                    {post.category.name}
+                  </span>
+                )}
+                {/* Innovation 1: Fact-Checked & Verified Trust Badge */}
+                <FactCheckBadge categoryName={post.category?.name} />
+              </div>
+
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
                 {post.title}
               </h1>
@@ -151,13 +166,19 @@ export default async function PostDetailPage({ params }: PageProps) {
             </header>
 
             {/* Featured Image */}
-            <div className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 aspect-[16/10] relative">
+            <div className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 aspect-[16/10] relative shadow-lg">
               <img
                 src={imageUrl}
                 alt={post.imageAltText || post.title}
                 className="w-full h-full object-cover"
               />
             </div>
+
+            {/* Innovation 2: Text-To-Speech Audio Narration Player */}
+            <AudioPlayer title={post.title} content={post.content} />
+
+            {/* Innovation 3: Key Takeaways / 30-Second Executive Briefing Box */}
+            <KeyTakeaways content={post.content} excerpt={post.excerpt} />
 
             {/* Top In-Article Ad */}
             <AdUnit slot="article-top" format="horizontal" />
@@ -180,6 +201,9 @@ export default async function PostDetailPage({ params }: PageProps) {
               </div>
             )}
 
+            {/* Innovation 4: Interactive Reader Reaction Widget */}
+            <ReactionWidget postSlug={post.slug} initialLikes={post.likes} />
+
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
               <div className="pt-6 border-t border-slate-800 flex flex-wrap items-center gap-2">
@@ -196,7 +220,6 @@ export default async function PostDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            
             {/* Share Buttons */}
             <div className="pt-6 border-t border-slate-800">
               <SocialShare

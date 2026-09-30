@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 
@@ -14,11 +14,39 @@ interface NavbarProps {
   categories?: Category[]
 }
 
+// Fixed prioritized editorial order for news desk
+const ORDERED_PRIMARY_SLUGS = [
+  'breaking-news',
+  'politics',
+  'entertainment',
+  'business',
+  'sports',
+]
+
 export default function Navbar({ categories = [] }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const pathname = usePathname()
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setMoreDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false)
+    setMoreDropdownOpen(false)
+  }, [pathname])
 
   if (pathname?.startsWith('/admin')) {
     return null
@@ -33,23 +61,45 @@ export default function Navbar({ categories = [] }: NavbarProps) {
     }
   }
 
-  const defaultCategories = [
-    { name: 'Politics', slug: 'politics' },
-    { name: 'Entertainment', slug: 'entertainment' },
-    { name: 'Metro & News', slug: 'metro' },
-    { name: 'Sports', slug: 'sports' },
-    { name: 'Business & Tech', slug: 'business-tech' },
-    { name: 'Lifestyle', slug: 'lifestyle' },
+  // Fallback categories if none supplied
+  const defaultCategories: Category[] = [
+    { id: 9, name: 'Breaking News', slug: 'breaking-news' },
+    { id: 2, name: 'Politics', slug: 'politics' },
+    { id: 4, name: 'Entertainment', slug: 'entertainment' },
+    { id: 8, name: 'Business & Economy', slug: 'business' },
+    { id: 16, name: 'Sports', slug: 'sports' },
+    { id: 5, name: 'Metro & Security', slug: 'metro' },
+    { id: 6, name: 'Tech & Innovation', slug: 'technology' },
+    { id: 23, name: 'Opinion & Editorial', slug: 'opinion' },
+    { id: 22, name: 'General News', slug: 'general-news' },
   ]
 
-  const navCategories = categories.length > 0 ? categories.slice(0, 6) : defaultCategories
+  const sourceCats = categories.length > 0 ? categories : defaultCategories
+
+  // Primary categories (first 5)
+  const primaryCats: Category[] = []
+  const moreCats: Category[] = []
+
+  ORDERED_PRIMARY_SLUGS.forEach((slug) => {
+    const match = sourceCats.find((c) => c.slug === slug)
+    if (match) primaryCats.push(match)
+  })
+
+  // Put remaining categories in moreCats
+  sourceCats.forEach((c) => {
+    if (!ORDERED_PRIMARY_SLUGS.includes(c.slug)) {
+      moreCats.push(c)
+    }
+  })
 
   return (
     <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl">
       {/* Top Banner / Ticker */}
       <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-xs text-white font-medium py-1 px-4 text-center">
         <span className="inline-flex items-center gap-2">
-          <span className="bg-red-500 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">LIVE</span>
+          <span className="bg-red-500 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">
+            LIVE
+          </span>
           RealNaijaGist — Nigeria's Premier Breaking News, Entertainment &amp; Lifestyle Hub
         </span>
       </div>
@@ -57,7 +107,7 @@ export default function Navbar({ categories = [] }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3.5 group py-1.5">
+          <Link href="/" className="flex items-center gap-3.5 group py-1.5 flex-shrink-0">
             <img
               src="/logo.png?v=2"
               alt="RealNaijaGist Logo"
@@ -76,22 +126,83 @@ export default function Navbar({ categories = [] }: NavbarProps) {
           </Link>
 
           {/* Desktop Categories */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <Link
               href="/"
-              className="px-3 py-1.5 text-sm font-semibold rounded-md text-slate-200 hover:text-white hover:bg-slate-800/80 transition-all"
+              className={`px-3 py-1.5 text-sm font-semibold rounded-md transition-all ${
+                pathname === '/'
+                  ? 'text-white bg-emerald-600/30 border border-emerald-500/40 shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
             >
               Home
             </Link>
-            {navCategories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                className="px-3 py-1.5 text-sm font-medium rounded-md text-slate-300 hover:text-emerald-400 hover:bg-slate-800/60 transition-all"
-              >
-                {cat.name}
-              </Link>
-            ))}
+
+            {primaryCats.map((cat) => {
+              const isActive = pathname === `/category/${cat.slug}`
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/category/${cat.slug}`}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap ${
+                    isActive
+                      ? 'text-emerald-300 bg-emerald-950/60 border border-emerald-500/40 font-semibold'
+                      : 'text-slate-300 hover:text-emerald-400 hover:bg-slate-800/60'
+                  }`}
+                >
+                  {cat.name}
+                </Link>
+              )
+            })}
+
+            {/* "More" Dropdown */}
+            {moreCats.length > 0 && (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md inline-flex items-center gap-1.5 transition-all cursor-pointer ${
+                    moreDropdownOpen || moreCats.some((c) => pathname === `/category/${c.slug}`)
+                      ? 'text-emerald-300 bg-slate-800/90'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                  aria-expanded={moreDropdownOpen}
+                >
+                  <span>More</span>
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      moreDropdownOpen ? 'rotate-180 text-emerald-400' : 'text-slate-400'
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {moreDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-xl bg-slate-900 border border-slate-700/80 shadow-2xl py-2 z-50 animate-fade-in backdrop-blur-md">
+                    {moreCats.map((cat) => {
+                      const isActive = pathname === `/category/${cat.slug}`
+                      return (
+                        <Link
+                          key={cat.slug}
+                          href={`/category/${cat.slug}`}
+                          className={`block px-4 py-2 text-xs font-medium transition-colors ${
+                            isActive
+                              ? 'text-emerald-400 bg-emerald-950/50 font-bold'
+                              : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                          }`}
+                        >
+                          {cat.name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
 
           {/* Desktop Search & Actions */}
@@ -102,12 +213,12 @@ export default function Navbar({ categories = [] }: NavbarProps) {
                 placeholder="Search news, gist..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-56 bg-slate-800/80 border border-slate-700/80 rounded-full py-1.5 pl-3.5 pr-8 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                className="w-48 lg:w-56 bg-slate-800/80 border border-slate-700/80 rounded-full py-1.5 pl-3.5 pr-8 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
               />
               <button
                 type="submit"
                 aria-label="Search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -117,11 +228,11 @@ export default function Navbar({ categories = [] }: NavbarProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
-              className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
+              className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer"
             >
               {mobileMenuOpen ? (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,18 +250,18 @@ export default function Navbar({ categories = [] }: NavbarProps) {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-4">
+        <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-4">
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
-              placeholder="Search articles..."
+              placeholder="Search news, articles, topics..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-slate-800 border border-slate-700 rounded-lg py-2 pl-3.5 pr-10 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -158,24 +269,33 @@ export default function Navbar({ categories = [] }: NavbarProps) {
             </button>
           </form>
 
-          <nav className="flex flex-col space-y-1">
+          <nav className="grid grid-cols-2 gap-1.5 pt-2">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-md text-sm font-semibold text-slate-200 hover:bg-slate-800"
+              className={`px-3 py-2 rounded-md text-xs font-bold ${
+                pathname === '/' ? 'bg-emerald-600/30 text-white' : 'text-slate-200 hover:bg-slate-800'
+              }`}
             >
-              Home
+              🏠 Home
             </Link>
-            {navCategories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-md text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400"
-              >
-                {cat.name}
-              </Link>
-            ))}
+            {sourceCats.map((cat) => {
+              const isActive = pathname === `/category/${cat.slug}`
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/category/${cat.slug}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded-md text-xs font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-950/60 text-emerald-300 font-bold border border-emerald-500/30'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  {cat.name}
+                </Link>
+              )
+            })}
           </nav>
         </div>
       )}
