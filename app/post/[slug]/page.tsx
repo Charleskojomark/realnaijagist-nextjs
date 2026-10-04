@@ -38,7 +38,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug)
   if (!post) return { title: 'Post Not Found | RealNaijaGist' }
 
-  const ogImage = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
+  const rawOgImage = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
+  const ogImage = rawOgImage.startsWith('http') ? rawOgImage : 'https://realnaijagist.com/og-image.jpg'
 
   return {
     title: `${post.title} | RealNaijaGist`,
