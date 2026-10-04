@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -76,6 +76,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy &amp; Cookie Policy (GDPR)</Link></li>
               <li><Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms of Service</Link></li>
               <li><Link href="/disclaimer" className="hover:text-emerald-400 transition-colors">Fact-Checking &amp; Corrections Policy</Link></li>
+              <li><Link href="/advertise" className="hover:text-emerald-400 transition-colors font-semibold text-emerald-400/80">Advertise With Us</Link></li>
             </ul>
           </div>
 
