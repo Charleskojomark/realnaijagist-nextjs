@@ -16,7 +16,7 @@ import FactCheckBadge from '@/components/FactCheckBadge'
 import KeyTakeaways from '@/components/KeyTakeaways'
 import ReactionWidget from '@/components/ReactionWidget'
 import AudioPlayer from '@/components/AudioPlayer'
-import ViewTracker from '@/components/ViewTracker'
+import ViewCounter from '@/components/ViewCounter'
 
 export const dynamic = 'force-dynamic'
 
@@ -116,8 +116,7 @@ export default async function PostDetailPage({ params }: PageProps) {
       {/* Top Reading Progress Bar */}
       <ReadingProgressBar />
 
-      {/* Silently track views after 3s of reading */}
-      <ViewTracker slug={post.slug} />
+
 
       <script
         type="application/ld+json"
@@ -171,7 +170,7 @@ export default async function PostDetailPage({ params }: PageProps) {
                 <span>•</span>
                 <time dateTime={post.createdAt.toISOString()}>{dateFormatted}</time>
                 <span>•</span>
-                <span>{post.views} views</span>
+                <ViewCounter slug={post.slug} initialViews={post.views} />
                 <span>•</span>
                 <span>{readingTime(post.content)} min read</span>
               </div>
