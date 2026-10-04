@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import CookieConsent from '@/components/CookieConsent'
+import OutboundLinkTracker from '@/components/OutboundLinkTracker'
 import { getAllCategories } from '@/lib/posts'
 
 const outfit = Outfit({
@@ -108,6 +109,7 @@ export default async function RootLayout({
         </div>
         <Footer />
         <CookieConsent />
+        <OutboundLinkTracker />
       </body>
     </html>
   )

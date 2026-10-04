@@ -1,18 +1,33 @@
-'use client'
+﻿'use client'
 
 interface SocialShareProps {
   url: string
   title: string
 }
 
+function getShareUrl(baseUrl: string, platform: string) {
+  try {
+    const u = new URL(baseUrl)
+    u.searchParams.set('utm_source', platform)
+    u.searchParams.set('utm_medium', 'social_share')
+    u.searchParams.set('utm_campaign', 'article_share')
+    return u.toString()
+  } catch {
+    return baseUrl
+  }
+}
+
 export default function SocialShare({ url, title }: SocialShareProps) {
-  const encoded = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
+  const waUrl = encodeURIComponent(getShareUrl(url, 'whatsapp'))
+  const twUrl = encodeURIComponent(getShareUrl(url, 'twitter'))
+  const fbUrl = encodeURIComponent(getShareUrl(url, 'facebook'))
+  const copyShareUrl = getShareUrl(url, 'copylink')
 
   const shares = [
     {
       name: 'WhatsApp',
-      href: `https://wa.me/?text=${encodedTitle}%20${encoded}`,
+      href: `https://wa.me/?text=${encodedTitle}%20${waUrl}`,
       color: 'bg-green-600 hover:bg-green-500',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -23,7 +38,7 @@ export default function SocialShare({ url, title }: SocialShareProps) {
     },
     {
       name: 'Twitter/X',
-      href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encoded}&via=RealNaijaGist`,
+      href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${twUrl}&via=RealNaijaGist`,
       color: 'bg-slate-800 hover:bg-slate-700 border border-slate-700',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -33,7 +48,7 @@ export default function SocialShare({ url, title }: SocialShareProps) {
     },
     {
       name: 'Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encoded}`,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${fbUrl}`,
       color: 'bg-blue-700 hover:bg-blue-600',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -52,7 +67,7 @@ export default function SocialShare({ url, title }: SocialShareProps) {
       ),
       onClick: (e: React.MouseEvent) => {
         e.preventDefault()
-        navigator.clipboard.writeText(url).then(() => {
+        navigator.clipboard.writeText(copyShareUrl).then(() => {
           const btn = e.currentTarget as HTMLElement
           const orig = btn.getAttribute('aria-label')
           btn.setAttribute('aria-label', 'Copied!')
@@ -70,6 +85,7 @@ export default function SocialShare({ url, title }: SocialShareProps) {
           key={s.name}
           href={s.href}
           aria-label={s.name}
+          data-no-utm="true"
           target={s.name !== 'Copy Link' ? '_blank' : undefined}
           rel="noopener noreferrer"
           onClick={s.onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined}
