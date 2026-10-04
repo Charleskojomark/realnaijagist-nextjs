@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs } from '@/lib/posts'
@@ -16,6 +16,7 @@ import FactCheckBadge from '@/components/FactCheckBadge'
 import KeyTakeaways from '@/components/KeyTakeaways'
 import ReactionWidget from '@/components/ReactionWidget'
 import AudioPlayer from '@/components/AudioPlayer'
+import ViewTracker from '@/components/ViewTracker'
 
 export const dynamic = 'force-dynamic'
 
@@ -107,6 +108,9 @@ export default async function PostDetailPage({ params }: PageProps) {
       {/* Top Reading Progress Bar */}
       <ReadingProgressBar />
 
+      {/* Silently track views after 3s of reading */}
+      <ViewTracker slug={post.slug} />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -185,7 +189,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
             {/* Post Body */}
             <div
-              className="prose prose-invert prose-emerald max-w-none text-slate-300 leading-relaxed text-base sm:text-lg space-y-4"
+              className="article-prose-container prose prose-invert prose-emerald max-w-none leading-relaxed text-base sm:text-lg space-y-4"
               dangerouslySetInnerHTML={{ __html: formatPostContent(post.content) }}
             />
 
