@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
@@ -101,7 +101,7 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-slate-950">
+      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-slate-950 overflow-x-hidden">
         <Navbar categories={categories} />
         <div id="main-content" className="flex-1">
           {children}

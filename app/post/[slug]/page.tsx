@@ -38,8 +38,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug)
   if (!post) return { title: 'Post Not Found | RealNaijaGist' }
 
-  const rawOgImage = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
-  const ogImage = rawOgImage.startsWith('http') ? rawOgImage : 'https://realnaijagist.com/og-image.jpg'
+  // OG image: use cdnImageUrl (Cloudinary absolute URL) first.
+  // Only use featuredImage if it is already an absolute http URL.
+  // Fall back to the branded site OG image for posts without uploaded images.
+  const ogImage =
+    (post.cdnImageUrl && post.cdnImageUrl.startsWith('http'))
+      ? post.cdnImageUrl
+      : (post.featuredImage && post.featuredImage.startsWith('http'))
+        ? post.featuredImage
+        : 'https://realnaijagist.com/og-image.jpg'
 
   return {
     title: `${post.title} | RealNaijaGist`,
