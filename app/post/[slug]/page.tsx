@@ -125,7 +125,7 @@ export default async function PostDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 post-detail-scale">
         {/* Breadcrumb */}
         <nav className="text-base text-slate-200 mb-6 flex items-center gap-2 font-semibold">
           <Link href="/" className="hover:text-emerald-400">Home</Link>
