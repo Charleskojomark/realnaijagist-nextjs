@@ -13,7 +13,7 @@ A modern, high-performance, serverless digital news and magazine platform built 
   - Proper ad labeling (`ADVERTISEMENT`) with clean responsive slots that never overlap content or cause layout shifts.
   - Automated XML Sitemap (`/sitemap.xml`) and dynamic `robots.txt` for rapid Googlebot indexing.
   - Semantic HTML5 and schema.org `NewsArticle` JSON-LD structured data on all article pages.
-- **Automated News Scraping & AI Rewriter:** Serverless cron jobs via Vercel Cron that ingest Nigerian news feeds and generate fresh, original content using Groq AI (`llama-3.3-70b-versatile`).
+- **Automated News Scraping & AI Rewriter:** Serverless cron jobs via Vercel Cron that ingest Nigerian news feeds and generate fresh, original content using Groq AI (`openai/gpt-oss-20b`).
 - **Modern Dark & Emerald Aesthetic:** Mobile-first, responsive design featuring trending tickers, hero spotlight carousels, category archives, search filters, and newsletter capture.
 
 ---
@@ -98,6 +98,7 @@ Visit [http://localhost:3000](http://localhost:3000) to view the application.
    - `DIRECT_URL`
    - `OPENAI_API_KEY` (Groq API Key)
    - `OPENAI_API_BASE` (`https://api.groq.com/openai/v1`)
+   - `AI_MODEL` (`openai/gpt-oss-20b` or `openai/gpt-oss-120b`)
    - `CLOUDINARY_CLOUD_NAME`
    - `CLOUDINARY_API_KEY`
    - `CLOUDINARY_API_SECRET`

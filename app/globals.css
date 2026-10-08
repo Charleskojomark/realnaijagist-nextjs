@@ -1,9 +1,22 @@
 @import "tailwindcss";
 
-/* ============================================================
-   SITE THEME: Dark background controlled by bg-slate-950 on body.
-   This file adds article readability and overflow protection.
-   ============================================================ */
+/* Larger, heavier type scale so body copy is readable on phones and desktops. */
+@theme {
+  --text-xs: 0.9375rem;
+  --text-xs--line-height: 1.45rem;
+  --text-sm: 1.0625rem;
+  --text-sm--line-height: 1.65rem;
+  --text-base: 1.1875rem;
+  --text-base--line-height: 1.85rem;
+  --text-lg: 1.3125rem;
+  --text-lg--line-height: 1.95rem;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 2.05rem;
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-semibold: 650;
+  --font-weight-bold: 700;
+}
 
 :root {
   --font-sans: var(--font-outfit);
@@ -12,11 +25,13 @@
 body {
   font-family: var(--font-outfit, 'Outfit', system-ui, sans-serif);
   overflow-x: hidden;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.75;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================================
-   OVERFLOW PROTECTION
-   ============================================================ */
 #main-content,
 .max-w-7xl,
 .max-w-5xl,
@@ -25,24 +40,41 @@ body {
   overflow-x: hidden;
 }
 
-/* ============================================================
-   ARTICLE CONTENT - DARK READABLE STYLES + OVERFLOW CONTROL
-   ============================================================ */
-
-.article-prose-container {
+/* Article body: large, bold, clearly separated paragraphs */
+.article-prose-container,
+.article-prose-container.prose {
   background-color: transparent;
-  color: #e2e8f0 !important;
+  color: #f8fafc !important;
   overflow-x: hidden;
   word-break: break-word;
   overflow-wrap: break-word;
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+  line-height: 1.95 !important;
+  max-width: none;
 }
 
 .article-prose-container p,
+.article-prose-container.prose :where(p) {
+  color: #f1f5f9 !important;
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+  line-height: 1.95 !important;
+  margin: 0 0 1.75rem !important;
+  display: block;
+}
+
+.article-prose-container p:last-child {
+  margin-bottom: 0 !important;
+}
+
 .article-prose-container li,
-.article-prose-container span {
-  color: #cbd5e1 !important;
-  font-size: 1.0625rem;
-  line-height: 1.85;
+.article-prose-container span,
+.article-prose-container.prose :where(li) {
+  color: #f1f5f9 !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  line-height: 1.85 !important;
 }
 
 .article-prose-container h1,
@@ -50,57 +82,76 @@ body {
 .article-prose-container h3,
 .article-prose-container h4,
 .article-prose-container h5,
-.article-prose-container h6 {
-  color: #f1f5f9 !important;
-  font-weight: 700;
+.article-prose-container h6,
+.article-prose-container.prose :where(h2),
+.article-prose-container.prose :where(h3) {
+  color: #ffffff !important;
+  font-weight: 800 !important;
   line-height: 1.3;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.article-prose-container h2 {
+  font-size: 1.85rem !important;
+}
+
+.article-prose-container h3 {
+  font-size: 1.55rem !important;
 }
 
 .article-prose-container a {
   color: #34d399 !important;
   text-decoration: underline;
+  font-weight: 700;
   word-break: break-all;
 }
 
 .article-prose-container strong,
 .article-prose-container b {
-  color: #f1f5f9 !important;
-  font-weight: 700;
+  color: #ffffff !important;
+  font-weight: 800;
 }
 
 .article-prose-container blockquote {
-  border-left: 3px solid #34d399;
-  padding-left: 1rem;
-  color: #94a3b8 !important;
+  border-left: 4px solid #34d399;
+  padding: 1rem 1.25rem;
+  color: #e2e8f0 !important;
   font-style: italic;
-  margin: 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.75rem 0;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 0 12px 12px 0;
 }
 
-/* Images always constrained */
 .article-prose-container img {
   border-radius: 12px;
   max-width: 100% !important;
   width: 100%;
   height: auto !important;
-  margin: 1rem auto;
+  margin: 1.5rem auto;
   display: block;
 }
 
 .article-prose-container ul,
 .article-prose-container ol {
   padding-left: 1.5rem;
-  color: #cbd5e1 !important;
+  margin: 0 0 1.75rem;
+  color: #f1f5f9 !important;
 }
 
-/* Tables scrollable horizontally */
+.article-prose-container li {
+  margin-bottom: 0.85rem;
+}
+
 .article-prose-container table {
   border-collapse: collapse;
   max-width: 100%;
-  color: #cbd5e1 !important;
+  color: #f1f5f9 !important;
   display: block;
   overflow-x: auto;
+  margin-bottom: 1.75rem;
 }
 
 .article-prose-container td,
@@ -112,10 +163,10 @@ body {
 
 .article-prose-container th {
   background: #1e293b;
-  color: #f1f5f9 !important;
+  color: #f8fafc !important;
+  font-weight: 700;
 }
 
-/* iFrames never overflow */
 .article-prose-container iframe,
 .article-prose-container video,
 .article-prose-container embed {
@@ -130,12 +181,14 @@ body {
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #334155;
+  margin-bottom: 1.75rem;
 }
 
 .article-prose-container code {
   color: #34d399;
   font-family: monospace;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 html {
@@ -149,4 +202,21 @@ html {
 
 header nav {
   overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 1.125rem;
+  }
+
+  .article-prose-container,
+  .article-prose-container p,
+  .article-prose-container.prose :where(p) {
+    font-size: 1.22rem !important;
+    line-height: 1.9 !important;
+  }
+
+  .article-prose-container p {
+    margin-bottom: 1.55rem !important;
+  }
 }

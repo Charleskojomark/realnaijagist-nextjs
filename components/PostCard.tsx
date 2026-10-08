@@ -53,7 +53,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
         </div>
         <div className="p-6 md:p-8 flex flex-col justify-between md:w-2/5">
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex items-center gap-2 text-sm text-slate-300 font-semibold">
               <span>{dateStr}</span>
               <span>•</span>
               <span>{post.views || 0} views</span>
@@ -64,18 +64,18 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
               </Link>
             </h2>
             {post.excerpt && (
-              <p className="text-sm text-slate-400 line-clamp-3 leading-relaxed">
+              <p className="text-base text-slate-300 line-clamp-3 leading-relaxed font-medium">
                 {formatExcerpt(post.excerpt)}
               </p>
             )}
           </div>
           <div className="pt-4 flex items-center justify-between border-t border-slate-800">
-            <span className="text-xs text-slate-400">
-              By <span className="text-slate-300 font-medium">{post.author?.username || 'RealNaijaGist Desk'}</span>
+            <span className="text-sm text-slate-300">
+              By <span className="text-slate-100 font-semibold">{post.author?.username || 'RealNaijaGist Desk'}</span>
             </span>
             <Link
               href={`/post/${post.slug}`}
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+              className="text-sm font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
             >
               Read Full Story &rarr;
             </Link>
@@ -102,29 +102,29 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
       </div>
       <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-[11px] text-slate-400">
+          <div className="flex items-center gap-2 text-sm text-slate-300 font-semibold">
             <span>{dateStr}</span>
             <span>•</span>
             <span>{post.views || 0} reads</span>
             <span>·</span>
             <span>{readingTime(post.excerpt || post.title)} min read</span>
           </div>
-          <h3 className="font-bold text-sm text-white group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-extrabold text-lg text-white group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
             <Link href={`/post/${post.slug}`}>
               {post.title}
             </Link>
           </h3>
           {post.excerpt && (
-            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+            <p className="text-base text-slate-300 line-clamp-2 leading-relaxed font-medium">
               {formatExcerpt(post.excerpt)}
             </p>
           )}
         </div>
-        <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-          <span className="text-slate-400 truncate max-w-[140px]">
+        <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-sm">
+          <span className="text-slate-300 truncate max-w-[140px] font-medium">
             {post.author?.username || 'RealNaijaGist'}
           </span>
-          <Link href={`/post/${post.slug}`} className="text-emerald-400 hover:text-emerald-300 font-medium">
+          <Link href={`/post/${post.slug}`} className="text-emerald-400 hover:text-emerald-300 font-bold">
             Read &rarr;
           </Link>
         </div>

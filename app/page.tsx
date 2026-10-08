@@ -43,14 +43,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           {/* Section Header */}
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <span className="text-[11px] uppercase tracking-widest text-emerald-400 font-bold">
+              <span className="text-sm uppercase tracking-widest text-emerald-400 font-bold">
                 Nigeria Live
               </span>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-0.5">
+              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight mt-0.5">
                 Breaking News &amp; Exclusive Gist
               </h1>
             </div>
-            <span className="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full">
+            <span className="text-sm text-slate-300 font-semibold bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full">
               Today's News
             </span>
           </div>

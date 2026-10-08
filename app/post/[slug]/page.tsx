@@ -5,6 +5,7 @@ import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs } from '@/lib/post
 import { getOptimizedImageUrl } from '@/lib/images'
 import { formatPostContent } from '@/lib/formatContent'
 import { readingTime } from '@/lib/formatExcerpt'
+import { generateKeyTakeaways } from '@/lib/ai'
 import SocialShare from '@/components/SocialShare'
 import AdUnit from '@/components/AdUnit'
 import PostCard from '@/components/PostCard'
@@ -78,6 +79,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
   const related = await getRelatedPosts(post.categoryId, post.id, 3)
   const imageUrl = getOptimizedImageUrl(post.cdnImageUrl || post.featuredImage)
+  const aiTakeaways = await generateKeyTakeaways(post.content, post.excerpt)
   const dateFormatted = new Date(post.createdAt).toLocaleDateString('en-NG', {
     day: 'numeric',
     month: 'long',
@@ -125,7 +127,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Breadcrumb */}
-        <nav className="text-xs text-slate-400 mb-6 flex items-center gap-2">
+        <nav className="text-base text-slate-200 mb-6 flex items-center gap-2 font-semibold">
           <Link href="/" className="hover:text-emerald-400">Home</Link>
           <span>/</span>
           {post.category && (
@@ -136,7 +138,7 @@ export default async function PostDetailPage({ params }: PageProps) {
               <span>/</span>
             </>
           )}
-          <span className="truncate max-w-[200px] sm:max-w-md text-slate-300">{post.title}</span>
+          <span className="truncate max-w-[200px] sm:max-w-md text-slate-100">{post.title}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
@@ -145,7 +147,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             <header className="space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 {post.category && (
-                  <span className="bg-emerald-600/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                  <span className="bg-emerald-600/90 text-white text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
                     {post.category.name}
                   </span>
                 )}
@@ -153,17 +155,17 @@ export default async function PostDetailPage({ params }: PageProps) {
                 <FactCheckBadge categoryName={post.category?.name} />
               </div>
 
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-[3.15rem] font-black text-white tracking-tight leading-tight">
                 {post.title}
               </h1>
 
               {/* Byline */}
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 py-3 border-y border-slate-800">
+              <div className="flex flex-wrap items-center gap-3 text-base text-slate-200 font-semibold py-3 border-y border-slate-800">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-white text-[11px]">
+                  <div className="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-white text-sm">
                     {post.author?.username?.charAt(0).toUpperCase() || 'R'}
                   </div>
-                  <span className="text-slate-200 font-semibold">
+                  <span className="text-white font-bold">
                     {post.author?.username || 'RealNaijaGist Desk'}
                   </span>
                 </div>
@@ -188,15 +190,15 @@ export default async function PostDetailPage({ params }: PageProps) {
             {/* Innovation 2: Text-To-Speech Audio Narration Player */}
             <AudioPlayer title={post.title} content={post.content} />
 
-            {/* Innovation 3: Key Takeaways / 30-Second Executive Briefing Box */}
-            <KeyTakeaways content={post.content} excerpt={post.excerpt} />
+            {/* Innovation 3: Key Takeaways — Groq GPT-OSS AI summary with local fallback */}
+            <KeyTakeaways content={post.content} excerpt={post.excerpt} aiPoints={aiTakeaways} />
 
             {/* Top In-Article Ad */}
             <AdUnit slot="article-top" format="horizontal" />
 
             {/* Post Body */}
             <div
-              className="article-prose-container prose prose-invert prose-emerald max-w-none leading-relaxed text-base sm:text-lg space-y-4"
+              className="article-prose-container max-w-none"
               dangerouslySetInnerHTML={{ __html: formatPostContent(post.content) }}
             />
 
@@ -218,7 +220,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
               <div className="pt-6 border-t border-slate-800 flex flex-wrap items-center gap-2">
-                <span className="text-xs font-bold text-slate-400 uppercase">Tags:</span>
+                <span className="text-sm font-bold text-slate-300 uppercase">Tags:</span>
                 {post.tags.map(({ tag }) => (
                   <Link
                     key={tag.slug}

@@ -95,7 +95,7 @@ export default function Navbar({ categories = [] }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl">
       {/* Top Banner / Ticker */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-xs text-white font-medium py-1 px-4 text-center">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-sm text-white font-semibold py-1.5 px-4 text-center">
         <span className="inline-flex items-center gap-2">
           <span className="bg-red-500 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">
             LIVE
@@ -129,7 +129,7 @@ export default function Navbar({ categories = [] }: NavbarProps) {
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <Link
               href="/"
-              className={`px-3 py-1.5 text-sm font-semibold rounded-md transition-all ${
+              className={`px-3 py-1.5 text-base font-bold rounded-md transition-all ${
                 pathname === '/'
                   ? 'text-white bg-emerald-600/30 border border-emerald-500/40 shadow-sm'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
@@ -144,7 +144,7 @@ export default function Navbar({ categories = [] }: NavbarProps) {
                 <Link
                   key={cat.slug}
                   href={`/category/${cat.slug}`}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap ${
+                  className={`px-3 py-1.5 text-base font-semibold rounded-md transition-all whitespace-nowrap ${
                     isActive
                       ? 'text-emerald-300 bg-emerald-950/60 border border-emerald-500/40 font-semibold'
                       : 'text-slate-300 hover:text-emerald-400 hover:bg-slate-800/60'

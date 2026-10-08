@@ -34,7 +34,7 @@ export default function Footer() {
                 </span>
               </div>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-sm text-slate-300 leading-relaxed font-medium">
               Nigeria&apos;s authoritative digital magazine delivering verified breaking news, political commentary, entertainment gist, viral trends, and cultural insight.
             </p>
             <div className="flex items-center gap-3 pt-2 text-slate-400">
@@ -52,10 +52,10 @@ export default function Footer() {
 
           {/* Quick Categories */}
           <div>
-            <h3 className="text-white text-xs font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
+            <h3 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
               Categories
             </h3>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-sm font-medium">
               <li><Link href="/category/politics" className="hover:text-emerald-400 transition-colors">Politics &amp; Governance</Link></li>
               <li><Link href="/category/entertainment" className="hover:text-emerald-400 transition-colors">Nollywood &amp; Music</Link></li>
               <li><Link href="/category/metro" className="hover:text-emerald-400 transition-colors">Metro &amp; Crime</Link></li>
@@ -67,10 +67,10 @@ export default function Footer() {
 
           {/* AdSense Compliance Essential Links */}
           <div>
-            <h3 className="text-white text-xs font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
+            <h3 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
               Legal &amp; Transparency
             </h3>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-sm font-medium">
               <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About Us &amp; Editorial Board</Link></li>
               <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact Editorial Desk</Link></li>
               <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy &amp; Cookie Policy (GDPR)</Link></li>
@@ -82,10 +82,10 @@ export default function Footer() {
 
           {/* Newsletter Box */}
           <div>
-            <h3 className="text-white text-xs font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
+            <h3 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-emerald-500 pl-2">
               Daily Naija Brief
             </h3>
-            <p className="text-xs text-slate-400 mb-3">
+            <p className="text-sm text-slate-300 mb-3 font-medium">
               Get the top 5 breaking Nigerian news stories delivered straight to your inbox every morning at 7:00 AM WAT.
             </p>
             <form action="/api/newsletter" method="POST" className="space-y-2">

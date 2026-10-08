@@ -27,7 +27,7 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
       {/* Trending Posts Widget */}
       {trendingPosts.length > 0 && (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
-          <h3 className="text-sm font-black uppercase tracking-wider text-white border-l-3 border-emerald-500 pl-2.5 mb-4 flex items-center justify-between">
+          <h3 className="text-base font-black uppercase tracking-wider text-white border-l-3 border-emerald-500 pl-2.5 mb-4 flex items-center justify-between">
             <span>🔥 Trending Now</span>
             <span className="text-[10px] text-emerald-400 font-semibold lowercase">24h pulse</span>
           </h3>
@@ -43,7 +43,7 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
                       {post.category.name}
                     </span>
                   )}
-                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
+                  <h4 className="text-sm font-bold text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
                     <Link href={`/post/${post.slug}`}>
                       {post.title}
                     </Link>
@@ -58,7 +58,7 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
       {/* Popular Posts Widget */}
       {popularPosts.length > 0 && (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
-          <h3 className="text-sm font-black uppercase tracking-wider text-white border-l-3 border-emerald-500 pl-2.5 mb-4">
+          <h3 className="text-base font-black uppercase tracking-wider text-white border-l-3 border-emerald-500 pl-2.5 mb-4">
             ⭐ Most Read This Week
           </h3>
           <div className="space-y-3.5">
@@ -75,7 +75,7 @@ export default function SidebarWidgets({ trendingPosts = [], popularPosts = [] }
                     />
                   </div>
                   <div className="space-y-1 flex-1 min-w-0">
-                    <h4 className="text-xs font-medium text-slate-300 group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
+                    <h4 className="text-sm font-semibold text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
                       <Link href={`/post/${post.slug}`}>
                         {post.title}
                       </Link>

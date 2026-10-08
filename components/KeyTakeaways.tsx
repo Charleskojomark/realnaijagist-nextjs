@@ -5,20 +5,20 @@ import { useState } from 'react'
 interface KeyTakeawaysProps {
   content: string
   excerpt?: string | null
+  /** Prefer AI-generated bullets from Groq when available */
+  aiPoints?: string[]
 }
 
-export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
+export default function KeyTakeaways({ content, excerpt, aiPoints }: KeyTakeawaysProps) {
   const [copied, setCopied] = useState(false)
 
-  // Extract 3-4 bullet points from content or excerpt
-  const getPoints = () => {
-    // Strip HTML tags and newlines
+  // Extract 3-4 bullet points from content or excerpt (fallback)
+  const getLocalPoints = () => {
     const cleanText = content
       .replace(/<[^>]*>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim()
 
-    // Split into sentences
     const sentences = cleanText
       .split(/(?<=[.?!])\s+/)
       .map((s) => s.trim())
@@ -45,7 +45,8 @@ export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
     ]
   }
 
-  const points = getPoints()
+  const points =
+    aiPoints && aiPoints.length >= 2 ? aiPoints.slice(0, 3) : getLocalPoints()
 
   const handleCopy = () => {
     const textToCopy = `📌 Key Takeaways (RealNaijaGist):\n` + points.map((p) => `• ${p}`).join('\n')
@@ -56,10 +57,8 @@ export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
 
   return (
     <div className="my-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/95 to-emerald-950/20 border border-emerald-500/30 p-5 sm:p-6 shadow-xl relative overflow-hidden">
-      {/* Decorative gradient glow */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none -mr-10 -mt-10" />
 
-      {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800/80">
         <div className="flex items-center gap-2.5">
           <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -68,10 +67,10 @@ export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
             </svg>
           </span>
           <div>
-            <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight flex items-center gap-2">
+            <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
               Key Takeaways
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                30-sec read
+              <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                {aiPoints && aiPoints.length >= 2 ? 'AI summary' : '30-sec read'}
               </span>
             </h3>
           </div>
@@ -80,7 +79,7 @@ export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
         <button
           onClick={handleCopy}
           type="button"
-          className="text-[11px] font-medium text-slate-400 hover:text-emerald-400 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition-colors"
+          className="text-xs font-semibold text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition-colors"
           title="Copy summary bullet points"
         >
           {copied ? (
@@ -101,11 +100,10 @@ export default function KeyTakeaways({ content, excerpt }: KeyTakeawaysProps) {
         </button>
       </div>
 
-      {/* Bullet Points */}
-      <ul className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+      <ul className="space-y-4 text-lg text-slate-100 font-semibold leading-relaxed">
         {points.map((point, idx) => (
           <li key={idx} className="flex items-start gap-3">
-            <span className="mt-1 flex-shrink-0 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span className="mt-2 flex-shrink-0 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
             <span className="flex-1">{point}</span>
           </li>
         ))}
