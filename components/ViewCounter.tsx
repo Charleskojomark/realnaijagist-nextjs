@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface ViewCounterProps {
   slug: string
@@ -17,11 +17,14 @@ interface ViewCounterProps {
  */
 export default function ViewCounter({ slug, initialViews }: ViewCounterProps) {
   const [views, setViews] = useState<number>(initialViews)
-  const [counted, setCounted] = useState(false)
+  // Use a ref (not state) for the "already counted" guard so flipping it
+  // doesn't trigger a re-render that would cancel the pending timer below
+  // before it ever fires.
+  const hasCountedRef = useRef(false)
 
   useEffect(() => {
-    if (counted) return
-    setCounted(true)
+    if (hasCountedRef.current) return
+    hasCountedRef.current = true
 
     // Small delay to avoid counting bots that bounce immediately
     const timer = setTimeout(async () => {
@@ -37,7 +40,7 @@ export default function ViewCounter({ slug, initialViews }: ViewCounterProps) {
     }, 2000)
 
     return () => clearTimeout(timer)
-  }, [slug, counted])
+  }, [slug])
 
   return (
     <span>
