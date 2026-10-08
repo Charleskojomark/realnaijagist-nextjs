@@ -31,24 +31,24 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Post detail page keeps the larger, bolder scale readers already have. */
+/* Post detail page is only slightly larger than the site-wide base scale. */
 .post-detail-scale {
-  --text-xs: 0.9375rem;
-  --text-xs--line-height: 1.45rem;
-  --text-sm: 1.0625rem;
-  --text-sm--line-height: 1.65rem;
-  --text-base: 1.1875rem;
-  --text-base--line-height: 1.85rem;
-  --text-lg: 1.3125rem;
-  --text-lg--line-height: 1.95rem;
-  --text-xl: 1.5rem;
-  --text-xl--line-height: 2.05rem;
-  --font-weight-normal: 500;
-  --font-weight-medium: 600;
+  --text-xs: 0.9rem;
+  --text-xs--line-height: 1.35rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.55rem;
+  --text-base: 1.1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.85rem;
+  --text-xl: 1.4rem;
+  --text-xl--line-height: 1.95rem;
+  --font-weight-normal: 475;
+  --font-weight-medium: 575;
   --font-weight-semibold: 650;
   --font-weight-bold: 700;
-  font-size: 1.1875rem;
-  line-height: 1.75;
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
 
 #main-content,
@@ -59,7 +59,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Article body: large, bold, clearly separated paragraphs */
+/* Article body: slightly larger than site base, bold, clearly separated paragraphs */
 .article-prose-container,
 .article-prose-container.prose {
   background-color: transparent;
@@ -67,19 +67,19 @@ body {
   overflow-x: hidden;
   word-break: break-word;
   overflow-wrap: break-word;
-  font-size: 1.35rem !important;
+  font-size: 1.15rem !important;
   font-weight: 600 !important;
-  line-height: 1.95 !important;
+  line-height: 1.85 !important;
   max-width: none;
 }
 
 .article-prose-container p,
 .article-prose-container.prose :where(p) {
   color: #f1f5f9 !important;
-  font-size: 1.35rem !important;
+  font-size: 1.15rem !important;
   font-weight: 600 !important;
-  line-height: 1.95 !important;
-  margin: 0 0 1.75rem !important;
+  line-height: 1.85 !important;
+  margin: 0 0 1.5rem !important;
   display: block;
 }
 
@@ -91,9 +91,9 @@ body {
 .article-prose-container span,
 .article-prose-container.prose :where(li) {
   color: #f1f5f9 !important;
-  font-size: 1.25rem !important;
+  font-size: 1.1rem !important;
   font-weight: 600 !important;
-  line-height: 1.85 !important;
+  line-height: 1.75 !important;
 }
 
 .article-prose-container h1,
@@ -112,11 +112,11 @@ body {
 }
 
 .article-prose-container h2 {
-  font-size: 1.85rem !important;
+  font-size: 1.5rem !important;
 }
 
 .article-prose-container h3 {
-  font-size: 1.55rem !important;
+  font-size: 1.3rem !important;
 }
 
 .article-prose-container a {
@@ -227,11 +227,11 @@ header nav {
   .article-prose-container,
   .article-prose-container p,
   .article-prose-container.prose :where(p) {
-    font-size: 1.22rem !important;
-    line-height: 1.9 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.8 !important;
   }
 
   .article-prose-container p {
-    margin-bottom: 1.55rem !important;
+    margin-bottom: 1.35rem !important;
   }
 }

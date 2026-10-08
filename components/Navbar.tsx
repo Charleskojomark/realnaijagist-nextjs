@@ -95,13 +95,18 @@ export default function Navbar({ categories = [] }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl">
       {/* Top Banner / Ticker */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-sm text-white font-semibold py-1.5 px-4 text-center">
-        <span className="inline-flex items-center gap-2">
-          <span className="bg-red-500 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-xs sm:text-sm text-white font-semibold py-1.5 px-4">
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
+          <span className="bg-red-500 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse shrink-0">
             LIVE
           </span>
-          RealNaijaGist — Nigeria's Premier Breaking News, Entertainment &amp; Lifestyle Hub
-        </span>
+          <span className="hidden sm:inline">
+            RealNaijaGist — Nigeria&apos;s Premier Breaking News, Entertainment &amp; Lifestyle Hub
+          </span>
+          <span className="sm:hidden">
+            Nigeria&apos;s Premier Breaking News &amp; Gist Hub
+          </span>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

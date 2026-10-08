@@ -59,27 +59,25 @@ export default function KeyTakeaways({ content, excerpt, aiPoints }: KeyTakeaway
     <div className="my-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/95 to-emerald-950/20 border border-emerald-500/30 p-5 sm:p-6 shadow-xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none -mr-10 -mt-10" />
 
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800/80">
-        <div className="flex items-center gap-2.5">
-          <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-4 pb-3 border-b border-slate-800/80">
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 min-w-0">
+          <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </span>
-          <div>
-            <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-              Key Takeaways
-              <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                {aiPoints && aiPoints.length >= 2 ? 'AI summary' : '30-sec read'}
-              </span>
-            </h3>
-          </div>
+          <h3 className="text-base sm:text-lg font-extrabold text-white tracking-tight flex flex-wrap items-center gap-2">
+            Key Takeaways
+            <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
+              {aiPoints && aiPoints.length >= 2 ? 'AI summary' : '30-sec read'}
+            </span>
+          </h3>
         </div>
 
         <button
           onClick={handleCopy}
           type="button"
-          className="text-xs font-semibold text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition-colors"
+          className="text-xs font-semibold text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition-colors shrink-0"
           title="Copy summary bullet points"
         >
           {copied ? (
@@ -94,13 +92,14 @@ export default function KeyTakeaways({ content, excerpt, aiPoints }: KeyTakeaway
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              <span>Share Highlights</span>
+              <span className="hidden sm:inline">Share Highlights</span>
+              <span className="sm:hidden">Share</span>
             </>
           )}
         </button>
       </div>
 
-      <ul className="space-y-4 text-lg text-slate-100 font-semibold leading-relaxed">
+      <ul className="space-y-3.5 text-base text-slate-100 font-semibold leading-relaxed">
         {points.map((point, idx) => (
           <li key={idx} className="flex items-start gap-3">
             <span className="mt-2 flex-shrink-0 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />

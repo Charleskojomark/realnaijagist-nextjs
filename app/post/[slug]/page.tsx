@@ -155,7 +155,7 @@ export default async function PostDetailPage({ params }: PageProps) {
                 <FactCheckBadge categoryName={post.category?.name} />
               </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-[3.15rem] font-black text-white tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] font-black text-white tracking-tight leading-tight">
                 {post.title}
               </h1>
 
