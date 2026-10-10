@@ -73,7 +73,13 @@ export async function PUT(
     if (slug !== undefined) updateData.slug = slug
     if (content !== undefined) updateData.content = content
     if (excerpt !== undefined) updateData.excerpt = excerpt
-    if (categoryId !== undefined) updateData.categoryId = Number(categoryId)
+    if (categoryId !== undefined) {
+      const parsedCategoryId = Number(categoryId)
+      if (isNaN(parsedCategoryId) || parsedCategoryId <= 0) {
+        return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
+      }
+      updateData.categoryId = parsedCategoryId
+    }
     if (featuredImage !== undefined) updateData.featuredImage = featuredImage
     if (status !== undefined) {
       updateData.status = status as PostStatus
@@ -107,9 +113,14 @@ export async function PUT(
     })
 
     return NextResponse.json({ success: true, post: updated })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating post:', error)
-    return NextResponse.json({ error: 'Failed to update post' }, { status: 500 })
+    const message = error?.message || 'Unknown error'
+    const code = error?.code || ''
+    return NextResponse.json(
+      { error: `Failed to update post: ${message}${code ? ` (Code: ${code})` : ''}` },
+      { status: 500 }
+    )
   }
 }
 

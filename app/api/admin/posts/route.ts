@@ -104,6 +104,37 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Validate categoryId is a valid number
+    const parsedCategoryId = Number(categoryId)
+    if (isNaN(parsedCategoryId) || parsedCategoryId <= 0) {
+      return NextResponse.json(
+        { error: 'Invalid category selected. Please select a valid category.' },
+        { status: 400 }
+      )
+    }
+
+    // Verify the category exists
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: parsedCategoryId },
+    })
+    if (!categoryExists) {
+      return NextResponse.json(
+        { error: `Category with ID ${parsedCategoryId} not found` },
+        { status: 400 }
+      )
+    }
+
+    // Verify the author (session user) exists in the database
+    const authorExists = await prisma.user.findUnique({
+      where: { id: session.id },
+    })
+    if (!authorExists) {
+      return NextResponse.json(
+        { error: `Your user account (ID: ${session.id}) was not found. Please log out and log in again.` },
+        { status: 400 }
+      )
+    }
+
     // Helper to format YouTube embed URLs if user inputs a standard watch URL
     let formattedVideoUrl = videoEmbedUrl?.trim() || null
     if (formattedVideoUrl) {
@@ -138,7 +169,7 @@ export async function POST(req: NextRequest) {
         slug,
         content,
         excerpt: excerpt || content.substring(0, 200).replace(/<[^>]*>?/gm, ''),
-        categoryId: Number(categoryId),
+        categoryId: parsedCategoryId,
         authorId: session.id,
         featuredImage: featuredImage || null,
         status: status as PostStatus,
@@ -151,8 +182,15 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ success: true, post })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating post:', error)
-    return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })
+    // Surface the actual error message for debugging
+    const message = error?.message || 'Unknown error'
+    const code = error?.code || ''
+    return NextResponse.json(
+      { error: `Failed to create post: ${message}${code ? ` (Code: ${code})` : ''}` },
+      { status: 500 }
+    )
   }
 }
+

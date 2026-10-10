@@ -213,6 +213,31 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
     setSaving(true)
 
     try {
+      if (!title.trim()) {
+        const msg = 'Please enter an article headline/title'
+        setError(msg)
+        showToast(msg, 'error')
+        setSaving(false)
+        return
+      }
+
+      if (!content.trim()) {
+        const msg = 'Please enter article body content'
+        setError(msg)
+        showToast(msg, 'error')
+        setSaving(false)
+        return
+      }
+
+      const numCat = Number(categoryId)
+      if (!numCat || isNaN(numCat) || numCat <= 0) {
+        const msg = 'Please select a valid category'
+        setError(msg)
+        showToast(msg, 'error')
+        setSaving(false)
+        return
+      }
+
       const url = isEditing ? `/api/admin/posts/${postId}` : '/api/admin/posts'
       const method = isEditing ? 'PUT' : 'POST'
 
@@ -224,7 +249,7 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
           slug,
           content,
           excerpt,
-          categoryId: Number(categoryId),
+          categoryId: numCat,
           featuredImage: featuredImage || null,
           status,
           isFeatured,
@@ -653,11 +678,18 @@ export default function AdminPostForm({ postId, initialData }: PostFormProps) {
                 onChange={(e) => setCategoryId(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500 cursor-pointer"
               >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
+                {categories.length === 0 ? (
+                  <option value="">Loading categories...</option>
+                ) : (
+                  <>
+                    <option value="" disabled>-- Select a Category --</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </>
+                )}
               </select>
             </div>
 
