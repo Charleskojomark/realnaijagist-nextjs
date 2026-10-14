@@ -1,5 +1,7 @@
-﻿import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next'
 import { getAllPublishedSlugs, getAllCategories } from '@/lib/posts'
+
+export const revalidate = 86400 // Cache XML sitemap at Edge CDN for 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://realnaijagist.com'

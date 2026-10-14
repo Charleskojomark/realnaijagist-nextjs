@@ -1,9 +1,8 @@
-export const dynamic = 'force-dynamic'
+export const revalidate = 1800 // Revalidate category archive every 30 minutes (ISR)
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import prisma from '@/lib/db'
-import { getPublishedPosts } from '@/lib/posts'
+import { getPublishedPosts, getCategoryBySlug, getAllCategories } from '@/lib/posts'
 import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
 import Pagination from '@/components/Pagination'
@@ -14,9 +13,18 @@ interface PageProps {
   searchParams: Promise<{ page?: string }>
 }
 
+export async function generateStaticParams() {
+  try {
+    const categories = await getAllCategories()
+    return categories.map((c) => ({ slug: c.slug }))
+  } catch {
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const category = await prisma.category.findUnique({ where: { slug } })
+  const category = await getCategoryBySlug(slug)
   if (!category) return { title: 'Category Not Found | RealNaijaGist' }
 
   const desc = category.description || `Read the latest ${category.name} news and breaking updates on RealNaijaGist.`
@@ -48,7 +56,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const { slug } = await params
   const { page: pageStr } = await searchParams
   const currentPage = parseInt(pageStr || '1', 10)
-  const category = await prisma.category.findUnique({ where: { slug } })
+  const category = await getCategoryBySlug(slug)
   if (!category) notFound()
   const { posts, total, totalPages } = await getPublishedPosts(currentPage, 12, slug)
 

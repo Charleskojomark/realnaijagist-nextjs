@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
 import { getSession } from '@/lib/auth'
 import { PostStatus } from '@prisma/client'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function GET(req: NextRequest) {
   try {
@@ -180,6 +181,16 @@ export async function POST(req: NextRequest) {
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
       },
     })
+
+    // Purge edge cache for immediate freshness
+    try {
+      revalidatePath('/')
+      revalidatePath(`/post/${post.slug}`)
+      revalidateTag('posts', 'max')
+      revalidateTag('categories', 'max')
+    } catch {
+      // Non-critical revalidation fallback
+    }
 
     return NextResponse.json({ success: true, post })
   } catch (error: any) {

@@ -1,5 +1,7 @@
 import prisma from './db'
 import { PostStatus } from '@prisma/client'
+import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 
 export async function getPublishedPosts(page = 1, pageSize = 12, categorySlug?: string) {
   try {
@@ -42,7 +44,8 @@ export async function getPublishedPosts(page = 1, pageSize = 12, categorySlug?: 
   }
 }
 
-export async function getPostBySlug(slug: string) {
+// React cache() deduplicates requests across generateMetadata and Page in the same render pass
+export const getPostBySlug = cache(async (slug: string) => {
   try {
     return await prisma.post.findUnique({
       where: { slug, status: PostStatus.PUBLISHED },
@@ -61,7 +64,25 @@ export async function getPostBySlug(slug: string) {
     console.warn('getPostBySlug fallback:', e)
     return null
   }
-}
+})
+
+// React cache() deduplicates category lookup in the same render pass
+export const getCategoryBySlug = cache(async (slug: string) => {
+  try {
+    return await prisma.category.findUnique({ where: { slug } })
+  } catch {
+    return null
+  }
+})
+
+// React cache() deduplicates tag lookup in the same render pass
+export const getTagBySlug = cache(async (slug: string) => {
+  try {
+    return await prisma.tag.findUnique({ where: { slug } })
+  } catch {
+    return null
+  }
+})
 
 export async function getRelatedPosts(categoryId: number, excludeId: number, limit = 4) {
   try {
@@ -86,49 +107,57 @@ export async function getRelatedPosts(categoryId: number, excludeId: number, lim
   }
 }
 
-export async function getTrendingPosts(limit = 5) {
-  try {
-    return await prisma.post.findMany({
-      where: { status: PostStatus.PUBLISHED, isTrending: true },
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        cdnImageUrl: true,
-        featuredImage: true,
-        views: true,
-        createdAt: true,
-        category: { select: { name: true, slug: true } },
-      },
-    })
-  } catch (e) {
-    return []
-  }
-}
+export const getTrendingPosts = unstable_cache(
+  async (limit = 5) => {
+    try {
+      return await prisma.post.findMany({
+        where: { status: PostStatus.PUBLISHED, isTrending: true },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          cdnImageUrl: true,
+          featuredImage: true,
+          views: true,
+          createdAt: true,
+          category: { select: { name: true, slug: true } },
+        },
+      })
+    } catch (e) {
+      return []
+    }
+  },
+  ['trending-posts-cache'],
+  { revalidate: 1800, tags: ['posts'] }
+)
 
-export async function getPopularPosts(limit = 5) {
-  try {
-    return await prisma.post.findMany({
-      where: { status: PostStatus.PUBLISHED },
-      orderBy: { views: 'desc' },
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        cdnImageUrl: true,
-        featuredImage: true,
-        views: true,
-        createdAt: true,
-        category: { select: { name: true, slug: true } },
-      },
-    })
-  } catch (e) {
-    return []
-  }
-}
+export const getPopularPosts = unstable_cache(
+  async (limit = 5) => {
+    try {
+      return await prisma.post.findMany({
+        where: { status: PostStatus.PUBLISHED },
+        orderBy: { views: 'desc' },
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          cdnImageUrl: true,
+          featuredImage: true,
+          views: true,
+          createdAt: true,
+          category: { select: { name: true, slug: true } },
+        },
+      })
+    } catch (e) {
+      return []
+    }
+  },
+  ['popular-posts-cache'],
+  { revalidate: 1800, tags: ['posts'] }
+)
 
 export async function searchPosts(query: string, page = 1, pageSize = 12) {
   try {
@@ -166,32 +195,40 @@ export async function searchPosts(query: string, page = 1, pageSize = 12) {
   }
 }
 
-export async function getActiveCarouselSlides(limit = 5) {
-  try {
-    return await prisma.carouselSlide.findMany({
-      where: {
-        isActive: true,
-        OR: [{ featuredUntil: null }, { featuredUntil: { gt: new Date() } }],
-      },
-      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-      take: limit,
-      include: { post: { select: { slug: true } } },
-    })
-  } catch (e) {
-    return []
-  }
-}
+export const getActiveCarouselSlides = unstable_cache(
+  async (limit = 5) => {
+    try {
+      return await prisma.carouselSlide.findMany({
+        where: {
+          isActive: true,
+          OR: [{ featuredUntil: null }, { featuredUntil: { gt: new Date() } }],
+        },
+        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+        take: limit,
+        include: { post: { select: { slug: true } } },
+      })
+    } catch (e) {
+      return []
+    }
+  },
+  ['carousel-slides-cache'],
+  { revalidate: 1800, tags: ['carousel'] }
+)
 
-export async function getAllCategories() {
-  try {
-    return await prisma.category.findMany({
-      orderBy: { name: 'asc' },
-      include: { _count: { select: { posts: { where: { status: PostStatus.PUBLISHED } } } } },
-    })
-  } catch (e) {
-    return []
-  }
-}
+export const getAllCategories = unstable_cache(
+  async () => {
+    try {
+      return await prisma.category.findMany({
+        orderBy: { name: 'asc' },
+        include: { _count: { select: { posts: { where: { status: PostStatus.PUBLISHED } } } } },
+      })
+    } catch (e) {
+      return []
+    }
+  },
+  ['all-categories-cache'],
+  { revalidate: 3600, tags: ['categories'] }
+)
 
 export async function getAllPublishedSlugs() {
   try {

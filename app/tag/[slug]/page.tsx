@@ -1,9 +1,10 @@
-export const dynamic = 'force-dynamic'
+export const revalidate = 1800 // Revalidate tag topic every 30 minutes (ISR)
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import prisma from '@/lib/db'
 import { PostStatus } from '@prisma/client'
+import { getTagBySlug } from '@/lib/posts'
 import PostCard from '@/components/PostCard'
 import SidebarWidgets from '@/components/SidebarWidgets'
 
@@ -13,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const tag = await prisma.tag.findUnique({ where: { slug } })
+  const tag = await getTagBySlug(slug)
   if (!tag) return { title: 'Tag Not Found | RealNaijaGist' }
 
   return {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TagPage({ params }: PageProps) {
   const { slug } = await params
-  const tag = await prisma.tag.findUnique({ where: { slug } })
+  const tag = await getTagBySlug(slug)
   if (!tag) notFound()
 
   const postTags = await prisma.postTag.findMany({

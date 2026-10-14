@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
 import { getSession } from '@/lib/auth'
 import { PostStatus } from '@prisma/client'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function GET(
   req: NextRequest,
@@ -112,6 +113,19 @@ export async function PUT(
       data: updateData,
     })
 
+    // Purge edge cache on update
+    try {
+      revalidatePath('/')
+      revalidatePath(`/post/${updated.slug}`)
+      if (existingPost.slug !== updated.slug) {
+        revalidatePath(`/post/${existingPost.slug}`)
+      }
+      revalidateTag('posts', 'max')
+      revalidateTag('categories', 'max')
+    } catch {
+      // Non-critical revalidation fallback
+    }
+
     return NextResponse.json({ success: true, post: updated })
   } catch (error: any) {
     console.error('Error updating post:', error)
@@ -137,9 +151,26 @@ export async function DELETE(
     const { id } = await params
     const postId = parseInt(id, 10)
 
+    const existing = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { slug: true },
+    })
+
     await prisma.post.delete({
       where: { id: postId },
     })
+
+    // Purge edge cache on delete
+    try {
+      revalidatePath('/')
+      if (existing?.slug) {
+        revalidatePath(`/post/${existing.slug}`)
+      }
+      revalidateTag('posts', 'max')
+      revalidateTag('categories', 'max')
+    } catch {
+      // Non-critical fallback
+    }
 
     return NextResponse.json({ success: true, message: 'Post deleted successfully' })
   } catch (error) {

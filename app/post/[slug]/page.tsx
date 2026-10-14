@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs } from '@/lib/posts'
@@ -19,7 +19,7 @@ import ReactionWidget from '@/components/ReactionWidget'
 import AudioPlayer from '@/components/AudioPlayer'
 import ViewCounter from '@/components/ViewCounter'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // Edge ISR: cache page at Edge CDN for 1 hour; background revalidation
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -28,7 +28,7 @@ interface PageProps {
 export async function generateStaticParams() {
   try {
     const posts = await getAllPublishedSlugs()
-    return posts.slice(0, 30).map((p) => ({ slug: p.slug }))
+    return posts.slice(0, 8).map((p) => ({ slug: p.slug }))
   } catch {
     return []
   }

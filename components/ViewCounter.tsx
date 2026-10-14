@@ -26,7 +26,7 @@ export default function ViewCounter({ slug, initialViews }: ViewCounterProps) {
     if (hasCountedRef.current) return
     hasCountedRef.current = true
 
-    // Small delay to avoid counting bots that bounce immediately
+    // 4s delay to avoid counting automated bots and immediate bounces
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(`/api/posts/${slug}`, { method: 'POST' })
@@ -37,7 +37,7 @@ export default function ViewCounter({ slug, initialViews }: ViewCounterProps) {
       } catch {
         // Fail silently - non-critical
       }
-    }, 2000)
+    }, 4000)
 
     return () => clearTimeout(timer)
   }, [slug])
